@@ -31,7 +31,7 @@ public class ShortestPath {
 		};
 
 		int size = 5;
-		String success=shortestDistance(distances,size);
+		shortestDistance(distances,size);
 		
 	}
 
@@ -48,11 +48,10 @@ public class ShortestPath {
 				for (int i = 1; i < size; i++) {
 					vertices[i - 1] = i;
 				}
-
-				// FIRST CALL TO THE RECURSIVE FUNCTION
+				//calling recursive function
 				bestRoute(0, vertices, path, 0,distances);
 
-				System.out.print("Path: " + bestPath + ". Distance = " + minimumDistance);
+				LOGGER.debug("Path: " + bestPath + ". Distance = " + minimumDistance);
 				
 		}catch(ArrayIndexOutOfBoundsException e){
 			LOGGER.debug("Array out of bound execption"+e.getMessage());

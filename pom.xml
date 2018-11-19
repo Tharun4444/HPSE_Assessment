@@ -41,7 +41,7 @@
           <manifest>
             <addClasspath>true</addClasspath>
             <classpathPrefix>lib/</classpathPrefix>
-            <mainClass>com/infy/TSP/runner/TspRunner</mainClass>
+            <mainClass>com/telstra/shortestpath/main/ShortestPath</mainClass>
           </manifest>
         </archive>
       </configuration>

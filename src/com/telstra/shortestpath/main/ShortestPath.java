@@ -21,7 +21,7 @@ public class ShortestPath {
 	private static String bestPath = "";
 
 
-	public static void main(String args[]) throws IOException{
+	public static void main(String args[]) {
 
 		int[][] distances=new int[][]{{0, 12, 10, 19, 8}, 
 			{12, 0, 3, 7, 2}, 
@@ -31,26 +31,43 @@ public class ShortestPath {
 		};
 
 		int size = 5;
-
-		// Initial variables to start the algorithm
-		String path = "";
-		int[] vertices = new int[size - 1];
-
-		// Filling the initial vertices array with the proper values
-		for (int i = 1; i < size; i++) {
-			vertices[i - 1] = i;
-		}
-
-		// FIRST CALL TO THE RECURSIVE FUNCTION
-		bestRoute(0, vertices, path, 0,distances);
-
-		System.out.print("Path: " + bestPath + ". Distance = " + minimumDistance);
+		String success=shortestDistance(distances,size);
+		
 	}
 
 
 
 
-	private static int bestRoute(int initial, int vertices[], String path, int distanceUntilHere, int[][] distances) {
+	public static String shortestDistance(int[][] distances, int size) {
+		try{
+		// Initial variables to start the algorithm
+				String path = "";
+				int[] vertices = new int[size - 1];
+
+				// Filling the initial vertices array with the proper values
+				for (int i = 1; i < size; i++) {
+					vertices[i - 1] = i;
+				}
+
+				// FIRST CALL TO THE RECURSIVE FUNCTION
+				bestRoute(0, vertices, path, 0,distances);
+
+				System.out.print("Path: " + bestPath + ". Distance = " + minimumDistance);
+				
+		}catch(ArrayIndexOutOfBoundsException e){
+			LOGGER.debug("Array out of bound execption"+e.getMessage());
+		}
+		return "Success";
+	}
+
+
+
+
+	
+
+
+
+	public static int bestRoute(int initial, int vertices[], String path, int distanceUntilHere, int[][] distances) {
 
 		// We concatenate the current path and the vertex taken as initial
 		path = path + Integer.toString(initial) + " - ";

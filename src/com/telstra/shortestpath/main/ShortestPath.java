@@ -1,7 +1,7 @@
 package com.telstra.shortestpath.main;
 
 import java.io.IOException;
-
+import org.apache.log4j.Logger;
 /**
  * There are 2 possible cases in each iteration:
  *
@@ -16,7 +16,7 @@ import java.io.IOException;
  */
 
 public class ShortestPath {
-
+	private static final Logger LOGGER = Logger.getLogger(ShortestPath.class);
 	private static int minimumDistance = Integer.MAX_VALUE;
 	private static String bestPath = "";
 

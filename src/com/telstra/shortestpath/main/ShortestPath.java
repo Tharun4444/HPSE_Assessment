@@ -56,8 +56,6 @@ public class ShortestPath {
 		path = path + Integer.toString(initial) + " - ";
 		int length = vertices.length;
 		int newDistance;
-
-
 		// Exit case, if there are no more options to evaluate (last node)
 		if (length == 0) {
 			newDistance = distanceUntilHere + distances[initial][0];

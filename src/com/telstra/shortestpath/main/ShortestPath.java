@@ -1,7 +1,6 @@
 package com.telstra.shortestpath.main;
 
-import java.io.*;
-import java.util.Scanner;
+import java.io.IOException;
 
 /**
  * There are 2 possible cases in each iteration:
@@ -18,118 +17,107 @@ import java.util.Scanner;
 
 public class ShortestPath {
 
-    /* ----------------------------- GLOBAL VARIABLES ------------------------------ */
-	//private static int[][] distances;
-    private static int optimalDistance = Integer.MAX_VALUE;
-    private static String optimalPath = "";
+	private static int minimumDistance = Integer.MAX_VALUE;
+	private static String bestPath = "";
 
 
-    /* ------------------------------ MAIN FUNCTION -------------------------------- */
+	public static void main(String args[]) throws IOException{
 
-    public static void main(String args[]) throws IOException{
+		int[][] distances=new int[][]{{0, 12, 10, 19, 8}, 
+			{12, 0, 3, 7, 2}, 
+			{10, 3, 0, 6, 20}, 
+			{19, 7, 6, 0, 4}, 
+			{8, 2, 20, 4, 0} 
+		};
 
+		int size = 5;
 
-       /*  ----------------------------- IO MANAGEMENT ----------------------------- */
+		// Initial variables to start the algorithm
+		String path = "";
+		int[] vertices = new int[size - 1];
 
-       
-    	 int[][] distances=new int[][]{{0, 12, 10, 19, 8}, 
-    	        {12, 0, 3, 7, 2}, 
-    	        {10, 3, 0, 6, 20}, 
-    	        {19, 7, 6, 0, 4}, 
-    	        {8, 2, 20, 4, 0} 
-    	       };
-    	       
-    	       
-    	       
-    	int size = 5;
-        /* ------------------------- ALGORITHM INITIALIZATION ----------------------- */
+		// Filling the initial vertices array with the proper values
+		for (int i = 1; i < size; i++) {
+			vertices[i - 1] = i;
+		}
 
-        // Initial variables to start the algorithm
-        String path = "";
-        int[] vertices = new int[size - 1];
+		// FIRST CALL TO THE RECURSIVE FUNCTION
+		bestRoute(0, vertices, path, 0,distances);
 
-        // Filling the initial vertices array with the proper values
-        for (int i = 1; i < size; i++) {
-            vertices[i - 1] = i;
-        }
-
-        // FIRST CALL TO THE RECURSIVE FUNCTION
-        procedure(0, vertices, path, 0,distances);
-
-        System.out.print("Path: " + optimalPath + ". Distance = " + optimalDistance);
-    }
+		System.out.print("Path: " + bestPath + ". Distance = " + minimumDistance);
+	}
 
 
-    /* ------------------------------- RECURSIVE FUNCTION ---------------------------- */
-
-    private static int procedure(int initial, int vertices[], String path, int distanceUntilHere, int[][] distances) {
-
-        // We concatenate the current path and the vertex taken as initial
-        path = path + Integer.toString(initial) + " - ";
-        int length = vertices.length;
-        int newDistance;
 
 
-        // Exit case, if there are no more options to evaluate (last node)
-        if (length == 0) {
-            newDistance = distanceUntilHere + distances[initial][0];
-            System.out.print("Path: " + path + "0" + ". Distance = " + newDistance+"\n");
-            // If its cost is lower than the stored one
-            if (newDistance < optimalDistance){
-                optimalDistance = newDistance;
-                optimalPath = path + "0";
-            }
-            System.out.print("Path: " + optimalPath + ". Distance = " + optimalDistance+"\n");
-            return (distances[initial][0]);
-        }
+	private static int bestRoute(int initial, int vertices[], String path, int distanceUntilHere, int[][] distances) {
+
+		// We concatenate the current path and the vertex taken as initial
+		path = path + Integer.toString(initial) + " - ";
+		int length = vertices.length;
+		int newDistance;
 
 
-        // If the current branch has higher cost than the stored one: stop traversing
-        else if (distanceUntilHere > optimalDistance){
-            return 0;
-        }
+		// Exit case, if there are no more options to evaluate (last node)
+		if (length == 0) {
+			newDistance = distanceUntilHere + distances[initial][0];
+
+			// If its cost is lower than the stored one
+			if (newDistance < minimumDistance){
+				minimumDistance = newDistance;
+				bestPath = path + "0";
+			}
+
+			return (distances[initial][0]);
+		}
 
 
-        // Common case, when there are several nodes in the list
-        else {
+		// If the current branch has higher cost than the stored one: stop traversing
+		else if (distanceUntilHere > minimumDistance){
+			return 0;
+		}
 
-            int[][] newVertices = new int[length][(length - 1)];
-            int currentDistance, childDistance;
-            int bestDistance = Integer.MAX_VALUE;
 
-            // For each of the nodes of the list
-            for (int i = 0; i < length; i++) {
+		// Common case, when there are several nodes in the list
+		else {
 
-                // Each recursion new vertices list is constructed
-                for (int j = 0, k = 0; j < length; j++, k++) {
+			int[][] newVertices = new int[length][(length - 1)];
+			int currentDistance, childDistance;
+			int bestDistance = Integer.MAX_VALUE;
 
-                    // The current child is not stored in the new vertices array
-                    if (j == i) {
-                        k--;
-                        continue;
-                    }
-                    newVertices[i][k] = vertices[j];
-                }
+			// For each of the nodes of the list
+			for (int i = 0; i < length; i++) {
 
-                // Cost of arriving the current node from its parent
-                currentDistance = distances[initial][vertices[i]];
+				// Each recursion new vertices list is constructed
+				for (int j = 0, k = 0; j < length; j++, k++) {
 
-                // Here the cost to be passed to the recursive function is computed
-                newDistance = currentDistance + distanceUntilHere;
+					// The current child is not stored in the new vertices array
+					if (j == i) {
+						k--;
+						continue;
+					}
+					newVertices[i][k] = vertices[j];
+				}
 
-                // RECURSIVE CALLS TO THE FUNCTION IN ORDER TO COMPUTE THE COSTS
-                childDistance = procedure(vertices[i], newVertices[i], path, newDistance,distances);
+				// Cost of arriving the current node from its parent
+				currentDistance = distances[initial][vertices[i]];
 
-                // The cost of every child + the current node cost is computed
-                int totalDistance = childDistance + currentDistance;
+				// Here the cost to be passed to the recursive function is computed
+				newDistance = currentDistance + distanceUntilHere;
 
-                // Finally we select from the minimum from all possible children costs
-                if (totalDistance < bestDistance) {
-                    bestDistance = totalDistance;
-                }
-            }
+				// RECURSIVE CALLS TO THE FUNCTION IN ORDER TO COMPUTE THE COSTS
+				childDistance = bestRoute(vertices[i], newVertices[i], path, newDistance,distances);
 
-            return (bestDistance);
-        }
-    }
+				// The cost of every child + the current node cost is computed
+				int totalDistance = childDistance + currentDistance;
+
+				// Finally we select from the minimum from all possible children costs
+				if (totalDistance < bestDistance) {
+					bestDistance = totalDistance;
+				}
+			}
+
+			return (bestDistance);
+		}
+	}
 }

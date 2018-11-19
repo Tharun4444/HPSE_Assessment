@@ -97,13 +97,13 @@ public class ShortestPath {
 					newVertices[i][k] = vertices[j];
 				}
 
-				// Cost of arriving the current node from its parent
+				// distance from current node and parent
 				currentDistance = distances[initial][vertices[i]];
 
-				// Here the cost to be passed to the recursive function is computed
+				// Here the to be traveled to the recursive function is computed
 				newDistance = currentDistance + distanceUntilHere;
 
-				// RECURSIVE CALLS TO THE FUNCTION IN ORDER TO COMPUTE THE COSTS
+				// Recursive calls to the function in order to compute the distance
 				childDistance = bestRoute(vertices[i], newVertices[i], path, newDistance,distances);
 
 				// The cost of every child + the current node cost is computed
